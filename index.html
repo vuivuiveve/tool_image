@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Công cụ chỉnh sửa hình ảnh trực tuyến - Bo góc, đổ bóng và xuất CSS tự động" />
+  <title>Image Style Editor — Bo góc & Đổ bóng</title>
+  <!-- Google Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <div class="header__brand">
+        <span class="header__logo" aria-hidden="true">✦</span>
+        <h1 class="header__title">Image Style Editor</h1>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Chuyển đổi Dark / Light Mode">
+        <span class="theme-toggle__icon theme-toggle__icon--light">☀️</span>
+        <span class="theme-toggle__icon theme-toggle__icon--dark">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main" id="main">
+    <div class="layout">
+
+      <!-- ---- PREVIEW PANEL ---- -->
+      <section class="card preview-card" id="previewCard">
+        <h2 class="card__heading">Xem trước</h2>
+
+        <!-- Upload Area (hiển thị khi chưa có ảnh) -->
+        <div class="upload-area" id="uploadArea">
+          <input type="file" id="fileInput" accept="image/*" hidden />
+          <div class="upload-area__content">
+            <span class="upload-area__icon" aria-hidden="true">📁</span>
+            <p class="upload-area__text">Kéo thả ảnh vào đây<br />hoặc <strong>nhấn để chọn ảnh</strong></p>
+            <span class="upload-area__hint">PNG, JPG, WEBP — tối đa 10 MB</span>
+          </div>
+        </div>
+
+        <!-- Preview Image Container -->
+        <div class="preview-wrapper" id="previewWrapper">
+          <img id="previewImage" class="preview-image" src="" alt="Ảnh xem trước" />
+        </div>
+
+        <!-- Action buttons -->
+        <div class="preview-actions" id="previewActions">
+          <button class="btn btn--outline" id="btnChangeImage">
+            <span aria-hidden="true">🔄</span> Đổi ảnh
+          </button>
+          <button class="btn btn--primary" id="btnDownload">
+            <span aria-hidden="true">⬇️</span> Tải ảnh
+          </button>
+        </div>
+      </section>
+
+      <!-- ---- CONTROLS PANEL ---- -->
+      <section class="card controls-card" id="controlsCard">
+        <h2 class="card__heading">Tùy chỉnh</h2>
+
+        <!-- Border Radius -->
+        <fieldset class="control-group" id="borderRadiusGroup">
+          <legend class="control-group__legend">Bo góc (Border Radius)</legend>
+          <div class="slider-row">
+            <input type="range" id="borderRadius" class="slider" min="0" max="200" value="0" />
+            <output class="slider-value" id="borderRadiusValue">0px</output>
+          </div>
+        </fieldset>
+
+        <!-- Box Shadow — Offsets & Blur & Spread -->
+        <fieldset class="control-group" id="boxShadowGroup">
+          <legend class="control-group__legend">Đổ bóng (Box Shadow)</legend>
+
+          <div class="slider-row">
+            <label for="shadowX" class="slider-label">Trục X</label>
+            <input type="range" id="shadowX" class="slider" min="-100" max="100" value="0" />
+            <output class="slider-value" id="shadowXValue">0px</output>
+          </div>
+
+          <div class="slider-row">
+            <label for="shadowY" class="slider-label">Trục Y</label>
+            <input type="range" id="shadowY" class="slider" min="-100" max="100" value="4" />
+            <output class="slider-value" id="shadowYValue">4px</output>
+          </div>
+
+          <div class="slider-row">
+            <label for="shadowBlur" class="slider-label">Độ mờ</label>
+            <input type="range" id="shadowBlur" class="slider" min="0" max="200" value="10" />
+            <output class="slider-value" id="shadowBlurValue">10px</output>
+          </div>
+
+          <div class="slider-row">
+            <label for="shadowSpread" class="slider-label">Lan rộng</label>
+            <input type="range" id="shadowSpread" class="slider" min="-100" max="100" value="0" />
+            <output class="slider-value" id="shadowSpreadValue">0px</output>
+          </div>
+        </fieldset>
+
+        <!-- Shadow Color & Opacity -->
+        <fieldset class="control-group" id="shadowColorGroup">
+          <legend class="control-group__legend">Màu & Độ trong suốt</legend>
+
+          <div class="color-row">
+            <label for="shadowColor" class="slider-label">Màu bóng</label>
+            <input type="color" id="shadowColor" class="color-picker" value="#000000" />
+            <span class="color-hex" id="shadowColorHex">#000000</span>
+          </div>
+
+          <div class="slider-row">
+            <label for="shadowOpacity" class="slider-label">Opacity</label>
+            <input type="range" id="shadowOpacity" class="slider" min="0" max="100" value="30" />
+            <output class="slider-value" id="shadowOpacityValue">30%</output>
+          </div>
+        </fieldset>
+
+        <!-- Reset -->
+        <button class="btn btn--ghost" id="btnReset">
+          <span aria-hidden="true">↺</span> Đặt lại mặc định
+        </button>
+      </section>
+
+      <!-- ---- CSS OUTPUT PANEL ---- -->
+      <section class="card css-card" id="cssCard">
+        <h2 class="card__heading">Mã CSS tạo tự động</h2>
+        <pre class="css-output" id="cssOutput"><code id="cssCode"></code></pre>
+        <button class="btn btn--accent" id="btnCopyCSS">
+          <span aria-hidden="true">📋</span> Sao chép CSS
+        </button>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ===== TOAST NOTIFICATION ===== -->
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
